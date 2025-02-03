@@ -1,4 +1,4 @@
-# 🌱 Robotic System for Rooftop Hydroponic Gardens
+# 🌱 Fault-Tolerant IoT-Enhanced Robotic Harvesting System
 
 ## 📌 Project Abstract
 This project focuses on developing an **autonomous robotic system** for rooftop hydroponic gardens to **grow leafy greens** (e.g., coriander, mint) using the **intercropping method**. The system optimizes **resource usage** (water and nutrients), monitors plant growth, and automates **irrigation and harvesting**.
