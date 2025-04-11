@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YOLO based tomato harvesting using robotic arm</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #14143d;
+      color: #333;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background-color: #2f311a;
+      color: white;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+    }
+
+    section {
+      padding: 2rem;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1rem;
+      background-color: white;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      color: #2a4d69;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    footer {
+      padding: 2rem;
+      background-color: #333;
+      color: white;
+      margin-top: 2rem;
+    }
+
+    a {
+      color: #0077b6;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #023e8a;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin: 0 auto;
+      display: block;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    video {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin: 1rem auto;
+      display: block;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    ol, ul {
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto 1rem auto;
+      padding-left: 2rem;
+    }
+
+    .timeline-container {
+      position: relative;
+      margin: 2rem auto;
+      padding-left: 40px;
+      border-left: 4px solid #0077b6;
+      max-width: 800px;
+      text-align: left;
+    }
+
+    .timeline-step {
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .timeline-step::before {
+      content: '';
+      position: absolute;
+      left: -22px;
+      top: 4px;
+      height: 12px;
+      width: 12px;
+      background-color: #0077b6;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #0077b6;
+    }
+
+    .timeline-title {
+      font-weight: bold;
+      color: #005f73;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .timeline-desc {
+      margin: 0;
+      color: #555;
+    }
+
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 1rem 0;
+    }
+
+    .image-container img {
+      flex: 0 1 auto;
+      max-width: 400px;
+      max-height: 300px;
+      object-fit: contain;
+    }
+
+    .math-container {
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .section-description {
+      max-width: 900px;
+      margin: 0 auto 1rem auto;
+    }
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+
+<header>
+  <h1>YOLO based tomato harvesting using robotic arm</h1>
+  <p>22MAT230 - Mathematics For Computing 4 ||
+    22AIE214 - Introduction to AI Robotics</p>
+</header>
+<section>
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><strong>Abstract</strong></li>
+      <li><strong>Introduction</strong></li>
+      <li><strong>Literature Review</strong></li>
+      <li><strong>Motivation</strong></li>
+      <li><strong>Methodology</strong>
+        <ol>
+          <li>Dataset</li>
+          <li>YOLO Fine-tuning and Data Augmentation</li>
+          <li>YOLO Architecture</li>
+          <li>Tomato Detection Using YOLO</li>
+          <li>Methodologies: Theory & Implementation</li>
+          <li>Computation Steps</li>
+          <li>Real-time Processing and Raspberry Pi 5 Integration</li>
+          <li>Inverse Kinematics</li>
+          <li>Motor Control</li>
+        </ol>
+      </li>
+      <li><strong>Pipeline</strong></li>
+      <li><strong>Challenges Faced</strong>
+        <ol>
+          <li>Accurate Depth Estimation</li>
+          <li>Camera Calibration</li>
+          <li>Real-time Processing on Raspberry Pi 5</li>
+          <li>Precision Movement of 5-DOF Robotic Arm</li>
+        </ol>
+      </li>
+      <li><strong>Project Progress Timeline</strong></li>
+      <li><strong>Results & Discussion</strong></li>
+      <li><strong>Conclusion</strong></li>
+      <li><strong>Future Scope</strong>
+        <ol>
+          <li>Multi-Crop Detection and Classification</li>
+          <li>Deployment to Small- and Medium-Sized Farms</li>
+        </ol>
+      </li>
+      <li><strong>References</strong></li>
+    </ol>
+  </section>
+<section>
+  <h2>1. Abstract</h2>
+  <p class="section-description">
+    This project presents a tomato harvesting robotic system that autonomously identifies and picks ripe tomatoes using a 5-DOF robotic arm with a wrist, controlled via Raspberry Pi. The system employs the lightweight YOLOv12n object detection model trained on the Laboro Tomato dataset to classify ripeness stages. Real-time detection and robotic arm coordination enable the precise picking of only ripe tomatoes, enhancing efficiency and reducing labor dependency in agricultural practices.
+  </p>
+</section>
+
+
+<section>
+  <h2>2. Introduction</h2>
+  <p class="section-description">
+    Manual harvesting of tomatoes is labor-intensive, error-prone, and time-consuming. To address this, we developed an intelligent tomato harvesting robot that automates fruit classification and picking. The robot integrates a Raspberry Pi-controlled 5-DOF robotic arm with a wrist joint for flexible motion. A camera captures real-time images, and the YOLOv12n model, trained on the Laboro dataset, detects and classifies tomato ripeness. Only ripe tomatoes are targeted for harvesting based on detection outputs. This system offers a low-cost, efficient, and scalable solution for modern precision agriculture.
+  </p>
+</section>
+<section>
+    <h2>3. Literature Review</h2>
+    <div class="image-container">
+        <img src="otherimgs/lit.png" alt="lit" width="600" height="200">
+    </div>
+    <p>Image 1: Literature review</p>
+</section>
+
+<section>
+  <h2>4. Motivation</h2>
+  <p class="section-description">
+    The agricultural industry is facing a significant labor shortage, leading to an increasing need for precision harvesting to optimize yield and reduce waste. Automation plays a crucial role in improving efficiency, especially in tasks such as harvesting, which are labor-intensive and time-sensitive. YOLOv12n is an ideal choice for this task, as it offers real-time detection, making it suitable for robotic control systems. Its lightweight nature makes it well-suited for edge devices like Raspberry Pi, and its high accuracy in identifying ripe tomatoes ensures effective harvesting. The goal of this project is to develop an AI-powered robotic system capable of detecting and harvesting only ripe tomatoes, thereby improving yield and reducing operational costs.
+  </p>
+</section>
+
+<section>
+  <h2>5. Methodology</h2>
+  <p class="section-description">
+    The methodology includes hardware setup, object detection using YOLOv12, 3D localization via camera calibration and depth estimation, and motion planning using inverse kinematics for the robotic arm. The robotic system uses Python for control and is deployed on a Raspberry Pi 5.
+  </p>
+  <ol>
+    <li><strong>Dataset</strong></li>
+    <p>Laboro Tomato is an image dataset of growing tomatoes at different stages of their ripening which is designed for object detection and instance segmentation tasks. We also provide two subsets of tomatoes separated by size. Dataset was gathered at a local farm with two separate cameras with its different resolution and image quality.</p>
+    <li><strong>YOLO fine-tuning and Data Augmentation</strong></li><br>
+        <img src="results/aug.jpg" alt="aug" width="400" height="200">
+        <p style="text-align: center;">Image 1: Data Augmentation</p><br>
+        <img src="otherimgs/dataset.png" alt="dataset" width="400" height="200">
+    <p style="text-align: center;"> Image 2: Original vs Augmented Data</p><br>
+    <li><strong>YOLO architecture</strong></li>
+    <div class="image-container">
+        <img src="otherimgs/architecture.jpeg" alt="YOLO Architecture" width="700" height="400">
+    </div>
+    <p>Image 4: Architecture of YOLO</p>
+    <p>1. Backbone – Feature Extraction
+        The backbone of YOLOv12 is responsible for extracting features from the input image. It uses convolutional layers, particularly a new 7×7 separable convolution block, which helps preserve spatial context with fewer parameters. Instead of stacking deep convolution blocks, YOLOv12 uses an R-ELAN block—a residual module where features are split, processed in parallel paths, and then merged:
+        Y = X + F(X)
+        This improves gradient flow and feature fusion. Depth-wise (7×7) and point-wise (1×1) convolutions are used to reduce complexity. Multi-scale pyramids also help detect objects of varying sizes.</p>
+    <p>2. Neck – Attention & Efficiency
+
+        The neck applies attention to important regions using Flash Attention, an efficient attention mechanism. It segments the image into 4×4 patches and computes attention. This improves focus on relevant areas and helps stabilize training. Depth-wise separable convolutions are also used here to reduce FLOPs, making the model lightweight and suitable for devices like Raspberry Pi.</p>
+    <p>3. Head – Detection Logic
+        The head generates the final predictions by combining multi-scale features. It upsamples and downsamples feature maps (P3, P4, P5) to merge fine and abstract features.
+            1. P3 captures small objects (fine details).
+            2. P4 focuses on medium-sized objects (balanced view).
+            3. P5 handles large objects (high-level semantic info).</p>
+    <p>4. Output – Non-Max Suppression
+
+        Non-Max Suppression removes duplicate boxes by comparing IOU (Intersection over Union). If the IOU between boxes is above 0.6–0.7, only the one with the highest confidence is kept.</p>
+        <li><a href="https://github.com/manognachalla/trainingcode" target="_blank"></a><strong>Tomato Detection Using YOLO</strong></a></li>
+        <li><strong> Methodologies: Theory & Implementation</strong></li>
+    <div class="math-container">
+        <p>Input Representation:</p>
+        \[
+        X \in \mathbb{R}^{B \times 3 \times H \times W}
+        \]
+
+        <p>Convolutional Transformation:</p>
+        \[
+        Y = \sigma(W * X + b)
+        \]
+
+        <p>Residual Connection:</p>
+        \[
+        Y_{\text{res}} = f(X) + X
+        \]
+
+        <p>Attention Mechanism:</p>
+        \[
+        \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
+        \]
+
+        <p>Prediction Vector:</p>
+        \[
+        \hat{y} = [x, y, w, h, c, p_1, \dots, p_{nc}, z_1, z_2, z_3]
+        \]
+
+        <p>Softmax Classification:</p>
+        \[
+        q_i = \frac{e^{z_i}}{\sum_{j}e^{z_j}}
+        \]
+
+        <p>Loss Function:</p>
+        \[
+        \mathcal{L} = \sum_{\lambda}\lambda_{\text{*}}\mathcal{L}_{\text{*}}
+        \]
+
+        <p>Optimization:</p>
+        \[
+        \theta_{t+1} = \theta_t - \eta \nabla \mathcal{L}
+        \]
+    </div>
+  
+    <li><strong>Computation Steps</strong></li>
+    <div class="math-container">
+        <p>Input: Image of a Tomato</p>
+        \[
+        X \in \mathbb{R}^{B \times 3 \times H \times W}
+        \]
+      
+        <p>Step 1: Feature Extraction (Convolution Layers)</p>
+        \[
+        Y_0 = \sigma(W_0 * X + b_0), \quad Y_1 = \sigma(W_1 * Y_0 + b_1)
+        \]
+        \[
+        Y_2 = f_{\text{C3k2}}^{(2)}(Y_1), \quad Y_3 = \sigma(W_3 * Y_2 + b_3)
+        \]
+      
+        <p>Step 2: Attention & Multi-Scale Processing</p>
+        \[
+        \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
+        \]
+        \[
+        Y_{\text{head}} = \text{Concat}(Y_{\text{P3}}, Y_{\text{P4}}, Y_{\text{P5}})
+        \]
+      
+        <p>Step 3: Prediction Vector (Object Detection)</p>
+        \[
+        \hat{y} = [x, y, w, h, c, p_1, \dots, p_{nc}]
+        \]
+      
+        <p>Step 4: Ripeness Classification</p>
+        \[
+        \hat{y} = [x, y, w, h, c, p_1, \dots, p_{nc}, z_1, z_2, z_3]
+        \]
+        \[
+        q_i = \frac{e^{z_i}}{\sum_{j}e^{z_j}}, \quad \text{ripeness} = \arg\max q_i
+        \]
+      
+        <p>Step 5: Loss Computation & Optimization</p>
+        \[
+        \mathcal{L} = \lambda_{\text{bbox}}\mathcal{L}_{\text{bbox}} + \lambda_{\text{obj}}\mathcal{L}_{\text{obj}} + \lambda_{\text{cls}}\mathcal{L}_{\text{cls}} + \lambda_{\text{ripeness}}\mathcal{L}_{\text{ripeness}}
+        \]
+        \[
+        \theta_{t+1} = \theta_t - \eta \nabla \mathcal{L}
+        \]
+      
+        <p>Final Output: Bounding box + class label + ripeness classification</p>
+    </div>
+    <li><strong>Real-time Processing and Raspberry Pi 5 Integration</strong></li>
+    <li><a href="ik_solver.m" target="_blank"><strong>Inverse Kinematics</strong></a></li><br>
+        <img src="otherimgs/kinematic_diagram.jpeg" alt="Kinematic Diagram" width="400" height="200">
+        <p>Image 5: Kinematic Diagram</p><br>
+        <img src="otherimgs/dhtable.png" alt="DH Table" width="400" height="200">
+        <p>Image 6: DH Table</p><br>
+        <img src="results/transmatrix.png" alt="Transformation Matrix" width="400" height="200">
+    <p> Image 7: Transformation Matrix</p><br>
+    <li><strong>Motor Control</strong></li>
+    <p></p>
+  </ol>
+</section>
+
+<section>
+  <h2>6. Pipeline</h2>
+  <ol>
+    <li>YOLOv12 model detects ripe tomatoes</li>
+    <li>Bounding box pixel → 3D base coordinates</li>
+    <li>Compute joint angles using inverse kinematics</li>
+    <li>Move robotic arm to target position and harvest using gripper</li>
+  </ol>
+</section>
+
+<section>
+  <h2>7. Challenges Faced</h2>
+  <ul>
+    <li>Accurate depth estimation from a single RGB camera</li>
+    <p>MIDAS fails to capture accurate depth in case of small objects that it is not fine-tuned on.</p>
+    <div class="image-container">
+        <img src="otherimgs/midasfail.jpeg" alt="Midas fail" width="600" height="400">
+    </div>
+    <p>Image 8: MIDAS depth estimation</p>
+    <li>Camera Calibration</li>
+    <p>To convert pixel coordinates to real world, we follow two steps.</p>
+    <p><a href="pixel_cam.py">1. Convert pixel coordinates to camera coordinates</a></p>
+    <p>2. Convert camera coordinates to robot's base coordinates</p>
+    <p>Main challenge was the second step where, though the transformation matrix is correct, the coordination fails due to the robot assuming different base frame every time.</p>
+    <div class="image-container">
+        <img src="otherimgs/pinhole.png" alt="pinhole" width="300" height="200">
+    </div>
+    <p>Image 9: Pinhole camera calibration</p>
+    <div class="image-container">
+        <img src="otherimgs/cc.png" alt="cc" width="300" height="200">
+    </div>
+    <p>Image 10: Forward Imaging Model</p>
+    <div class="image-container">
+        <img src="otherimgs/img_cam.png" alt="img_cam" width="300" height="200">
+    </div>
+    <p>Image 11: Pixel coordinates to Camera coordinates</p>
+    <li>Real-time processing on Raspberry Pi 5</li>
+    <li>Precision movement of 5-DOF robotic arm without ROS</li>
+  </ul>
+</section>
+
+<section>
+    <h2>8. Project Progress Timeline</h2>
+    <div class="timeline-container">
+      <div class="timeline-step">
+        <div class="timeline-title">1. Idea & Research</div>
+        <p class="timeline-desc">Identified the need for automation in harvesting and reviewed existing robotic agriculture solutions.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">2. Hardware Setup</div>
+        <p class="timeline-desc">Studied a 5-DOF robotic arm and integrated it with a Raspberry Pi 5.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">3. Simulation</div>
+        <p class="timeline-desc">Simulated an object detection, pick and place operation on webot simulator.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">3. Object Detection</div>
+        <p class="timeline-desc">Trained and deployed a YOLOv12 model for ripe tomato detection on Pi.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">4. Depth Estimation Using MIDAS</div>
+        <p class="timeline-desc">Tried estimating 3D coordinates using MIDAS. MIDAS fails to accurately estimate depth.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">5. Depth Estimation using pinhole camera model</div>
+        <p class="timeline-desc">Tried estimating 3D coordinates using pixel location and camera intrinsics.</p>
+      </div>
+      <div class="timeline-step">
+      <div class="timeline-title">6. Camera Calibration fails</div>
+        <p class="timeline-desc">Conversion of camera coordinates to base coordinates using transformation matrix does not work. The robot assumes different base frame every time.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">7. Inverse Kinematics</div>
+        <p class="timeline-desc">Solved for joint angles using geometric approach and Python control libraries. Also solved using Peter Corke's toolbox on Matlab for verification.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">8. Arm Control & Testing</div>
+        <p class="timeline-desc">Controlled the servo motors via Python and tested pick-and-place operations.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-title">9. Final Integration</div>
+        <p class="timeline-desc">Integrated all modules into a real-time harvesting system.</p>
+      </div>
+    </div>
+</section>
+
+<section>
+    <h2>9. Results & Discussion</h2>
+    <p>Class labels: 0- ripe tomato 1- half ripe tomato 2- unripe tomato 3-ripe cherry tomato 4- half ripe cherry tomato 5- unripe tomato</p>
+    <div class="image-container">
+        <img src="results/unripe.jpeg" alt="unripe" width="600" height="400">
+    </div>
+    <p>Image 12: class 2- unripe tomato with a confidence score ranging from 0.7 to 0.9</p>
+    <div class="image-container">
+        <img src="results/pi.jpg" alt="pi" width="400" height="267">
+        <img src="results/bulk.jpeg" alt="bulk" width="400" height="267">
+    </div>
+    <p>Image 13: Real-time setup | Image 14: Classes 3,4,5 - cherry tomatoes; ripe to unripe left to right respectively</p>
+    <div class="image-container">
+        <img src="results/option2.jpeg" alt="option2" width="400" height="267">
+        <img src="results/yolodetection1.jpeg" alt="yolodetection1" width="400" height="267">
+    </div>
+    <p>Image 15: While monitoring the frame the model has detected 1 ripe and 0 unripe tomatoes | Image 16: The tomato previously detected</p>
+    <div class="image-container">
+        <img src="results/yolooptions.jpeg" alt="yolooptions" width="600" height="400">
+    </div>
+    <p>Image 17: Harvesting routine</p>
+    <p><strong><a href="final.py">Harvesting routine code</a></strong></p>
+
+    <div class="image-container">
+        <img src="results/performance.png" alt="performance" width="500" height="200">
+    </div>
+    <p>Image 18: Our fine-tuned YOLOv12n model outperforms standard YOLO variants interms of mAP when trained on an augmented dataset</p>
+    <div class="image-container">
+        <img src="results/P_curve.png" alt="P_curve" width="400" height="300">
+        <img src="results/R_curve.png" alt="R_curve" width="400" height="300">
+        <img src="results/F1_curve.png" alt="F1" width="400" height="300">
+    </div>
+    <p>Image 19: Precision Confidence Curve | Image 20: Recall Confidence Curve | Image 21: F1 Confidence Curve</p>
+    <div class="image-container">
+        <img src="results/confusion_matrix_normalized.png" alt="ncm" width="400" height="267">
+        <img src="results/best.jpg" alt="best" width="400" height="267">
+    </div>
+    <p>Image 22: Normalised Confusion Matrix | Image 21: Training vs Validation Loss</p>
+</section>
+
+<section>
+    <video width="800" height="600" autoplay loop muted playsinline>
+        <source src="otherimgs/simulation.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <p>Video 1: Simulation</p>
+    <video width="800" height="600" autoplay loop muted playsinline>
+        <source src="results/final_vid.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <p>Video 2: Harvesting routine</p>
+</section>
+<section>
+  <h2>10. Conclusion</h2>
+  <p>This project successfully demonstrates an integrated system for autonomous tomato harvesting using computer vision and robotic control. By deploying a YOLOv12-based object detection model on a Raspberry Pi 5, the system effectively identifies ripe and unripe tomatoes in real time with high confidence. The use of camera intrinsics for depth estimation and transformation to the robot base frame ensures accurate spatial positioning of detected tomatoes. A 5-DOF robotic arm, controlled through inverse kinematics using a geometric approach, enables precise pick-and-place operations.
+
+    The entire pipeline—from image acquisition to fruit classification, localization, and harvesting—is handled on-board without the need for external computation or middleware like ROS. Experimental results show that the system can distinguish between multiple ripeness levels and perform targeted harvesting with minimal false picks. This highlights the feasibility of deploying affordable, efficient, and modular solutions for precision agriculture tasks in resource-constrained environments.</p>
+</section>
+<section>
+    <h2>11. Future Scope</h2>
+    <p><strong>Incorporate Multi-Crop Detection and Classification Capabilities</strong></p>
+    <p class="section-description">
+        The system can be extended to support the detection and classification of multiple crop types beyond tomatoes. This involves retraining the object detection model (e.g., YOLOv12) with a diverse, labeled dataset that includes various crops such as peppers, cucumbers, and eggplants. The model should be fine-tuned to distinguish between different plant types as well as their ripeness levels. Additionally, class-specific harvesting logic can be implemented to handle crops with unique picking requirements. This will make the system versatile and scalable for a range of agricultural scenarios.
+    </p>
+    <p><strong>Expand Deployment to Small- and Medium-Sized Farms</strong></p>
+    <p class="section-description"> 
+        Following successful prototyping and field testing, the robotic harvesting system is intended for deployment in small- to medium-scale farms. These farms often lack access to expensive automation solutions, so the goal is to offer a cost-effective, modular system that can be easily integrated into existing setups. The use of edge computing (via Raspberry Pi) and lightweight models ensures real-time performance without the need for cloud dependence. Future iterations will focus on durability, ease of use, and minimal maintenance to support long-term adoption in diverse agricultural environments.
+    </p>
+</section>
+<section>
+  <h2>12. References</h2>
+  <ul>
+    <li>
+      Yang, Dayeon and Ju, Chanyoung (2025). 
+      <i>Performance Comparison of Cherry Tomato Ripeness Detection Using Multiple YOLO Models</i>. 
+      <b>AgriEngineering</b>, 7(1), Article 8. 
+      <a href="https://www.mdpi.com/2624-7402/7/1/8">https://www.mdpi.com/2624-7402/7/1/8</a>. 
+      DOI: <a href="https://doi.org/10.3390/agriengineering7010008">10.3390/agriengineering7010008</a>
+    </li>
+  
+    <li>
+      Alif, Mujadded Al Rabbani and Hussain, Muhammad (2025). 
+      <i>YOLOv12: A Breakdown of the Key Architectural Features</i>. 
+      <b>arXiv preprint</b> arXiv:2502.14740. 
+      <a href="https://arxiv.org/abs/2502.14740">https://arxiv.org/abs/2502.14740</a>
+    </li>
+  
+    <li>
+      Chen, Ben; Liu, Yuyao; and Xiong, Caihua (2021). 
+      <i>Automatic Checkerboard Detection for Robust Camera Calibration</i>. 
+      In <b>2021 IEEE International Conference on Multimedia and Expo (ICME)</b>, pp. 1–6. 
+      DOI: <a href="https://doi.org/10.1109/ICME51207.2021.9428389">10.1109/ICME51207.2021.9428389</a>
+    </li>
+  
+    <li>
+      Tian, Yunjie; Ye, Qixiang; and Doermann, David (2025). 
+      <i>Yolov12: Attention-centric real-time object detectors</i>. 
+      <b>arXiv preprint</b> arXiv:2502.12524. 
+      <a href="https://arxiv.org/abs/2502.12524">https://arxiv.org/abs/2502.12524</a>
+    </li>
+  
+    <li>
+      Yahboom (2023). 
+      <i>Yahboom Robotic Arm Documentation</i>. 
+      Available at: <a href="https://www.yahboom.net/study/ArmPi">https://www.yahboom.net/study/ArmPi</a>
+    </li>
+  </ul>
+</section>
+
+<footer>
+  <p>TEAM B9</p>
+  <p>Dharshini CB.SC.U4AIE23115</p>
+  <p>Chanjhana CB.SC.U4AIE23120</p>
+  <p>Kaniska CB.SC.U4AIE23136</p>
+  <p>Manogna CB.SC.U4AIE23175</p>
+  <p><a href="https://github.com/your-username/your-repo-name" target="_blank">View Source on GitHub</a></p>
+</footer>
+
+</body>
+</html>
