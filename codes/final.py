@@ -1,4 +1,4 @@
-## import cv2
+import cv2
 import numpy as np
 import time
 from ultralytics import YOLO
@@ -201,70 +201,6 @@ class DofbotTomatoHarvester:
         
         print(f"Robot Base Coordinates: X: {X_robot:.2f} cm, Y: {Y_robot:.2f} cm, Z: {Z_robot:.2f} cm")
         return X_robot, Y_robot, Z_robot
-    
-    def dh_transform(self, theta, alpha, a, d):
-        """Returns the homogeneous transformation matrix using DH parameters"""
-        return np.array([
-            [np.cos(theta), -np.sin(theta) * np.cos(alpha), np.sin(theta) * np.sin(alpha), a * np.cos(theta)],
-            [np.sin(theta), np.cos(theta) * np.cos(alpha), -np.cos(theta) * np.sin(alpha), a * np.sin(theta)],
-            [0, np.sin(alpha), np.cos(alpha), d],
-            [0, 0, 0, 1]
-        ])
-    
-    def geometric_inverse_kinematics(self, x, y, z):
-        """Geometric approach to inverse kinematics for Dofbot"""
-        solutions = []
-        
-        # Calculate theta1 (base rotation)
-        theta1 = np.arctan2(y, x)
-        
-        # Calculate position of wrist center (adjust target point by end-effector length)
-        # For picking tomatoes, we want a vertical approach
-        wrist_offset = 4.0  # Gripper offset in cm (adjust based on your gripper size)
-        
-        # Target point for wrist
-        wx = x
-        wy = y
-        wz = z + wrist_offset  # Approach from above
-        
-        # Distance from base to wrist in XY plane
-        r_xy = np.sqrt(wx*2 + wy*2)
-        
-        # Adjusted wrist position considering the base height
-        r = (r_xy*2 + (wz - self.a1)*2)
-        
-        # Check if target is reachable
-        if r > (self.a2 + self.a3 + self.a5 - wrist_offset):
-            print(f"Target out of reach. Distance: {r:.2f} cm, Max reach: {self.a2 + self.a3 + self.a5 - wrist_offset:.2f} cm")
-            return []
-        
-        # Apply law of cosines for theta3
-        cos_theta3 = (r*2 - self.a2 - self.a3*2) / (2 * self.a2 * self.a3)
-        
-        # Check if this angle is possible
-        if abs(cos_theta3) > 1:
-            print(f"No valid configuration for this position. cos(theta3) = {cos_theta3:.2f}")
-            return []
-        
-        # Calculate theta3 (elbow angle)
-        theta3 = np.arccos(cos_theta3)  # Elbow down solution
-        
-        # Calculate theta2 (shoulder angle)
-        beta = np.arctan2(wz - self.a1, r_xy)
-        gamma = np.arctan2(self.a3 * np.sin(theta3), self.a2 + self.a3 * np.cos(theta3))
-        theta2 = beta - gamma
-        
-        # Calculate theta4 (wrist angle) to keep end-effector vertical
-        theta4 = -(theta2 + theta3)  # This keeps the end-effector vertical
-        
-        # Keep gripper orientation fixed (facing downward)
-        theta5 = 0
-        
-        # Convert to degrees
-        solution = np.degrees([theta1, theta2, theta3, theta4, theta5])
-        solutions.append(solution)
-        
-        return solutions
 
     def harvest_tomato(self):
         """Complete tomato harvesting sequence with fixed depth approach"""

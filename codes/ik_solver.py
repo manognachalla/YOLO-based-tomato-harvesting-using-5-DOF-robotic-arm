@@ -134,7 +134,7 @@ if __name__ == "__main__":
     
     # Desired end-effector position (x, y, z)
     T_goal = np.eye(4)
-    T_goal[0:3, 3] = np.array([183.0, 0, 190.317])
+    T_goal[0:3, 3] = np.array([160.0, 0, 35.0])
     
     # Run inverse kinematics
     theta_solution = inverse_kinematics(T_goal, theta_init, L)
