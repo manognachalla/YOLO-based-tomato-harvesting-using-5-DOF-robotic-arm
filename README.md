@@ -1,6 +1,6 @@
 # 🍅 Tomato Ripeness Detection & Harvesting with DOFBOT 🤖  
 
-This repository contains the implementation of an AI-driven **tomato harvesting system** using a **DOFBOT 5DOF robotic arm**. The system detects tomatoes, classifies their ripeness, and picks them using inverse kinematics and optimized path planning.
+This repository contains the implementation of an AI-driven **tomato harvesting system** using a **DOFBOT 5DOF robotic arm**. The system detects tomatoes, classifies their ripeness, and picks the ripe ones using inverse kinematics and optimized path planning.
 
 ## 🚀 Features  
 - **YOLOv12-based Tomato Detection** 🏷️  
